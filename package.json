@@ -1,0 +1,11 @@
+{
+  "name": "rishis-protocol",
+  "version": "1.0.0",
+  "description": "GPA 10.0 // DSA MASTERY Protocol Tracker",
+  "scripts": {
+    "start": "serve"
+  },
+  "dependencies": {
+    "serve": "^14.2.0"
+  }
+}
