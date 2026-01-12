@@ -38,6 +38,9 @@
         @keyframes pulse-glow { 0%, 100% { opacity: 1; filter: drop-shadow(0 0 5px currentColor); } 50% { opacity: 0.7; filter: drop-shadow(0 0 2px currentColor); } }
         .glow-text { animation: pulse-glow 3s infinite; }
 
+        @keyframes pop { 0% { transform: scale(1); } 50% { transform: scale(1.2); } 100% { transform: scale(1); } }
+        .pop-anim { animation: pop 0.2s ease-in-out; }
+
         /* Scrollbar */
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: #0f172a; }
@@ -58,7 +61,7 @@
         // --- CONFIGURATION ---
 
         const PASSCODE = "2808";
-        const STORAGE_KEY = "rishi_protocol_v6_tomorrow"; // NEW KEY = FRESH START
+        const STORAGE_KEY = "rishi_protocol_v7_enhanced"; // NEW KEY for Enhanced Version
         const MERCY_WINDOW_MINUTES = 15;
 
 
@@ -105,6 +108,61 @@
                 case 'Health': return 'bg-rose-500';
                 case 'Life': return 'bg-amber-500';
                 default: return 'bg-slate-500';
+            }
+        };
+
+        // --- AUDIO ENGINE ---
+        const playSuccessSound = () => {
+            try {
+                const AudioContext = window.AudioContext || window.webkitAudioContext;
+                if (!AudioContext) return;
+                
+                const ctx = new AudioContext();
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(523.25, ctx.currentTime); // C5
+                osc.frequency.exponentialRampToValueAtTime(1046.5, ctx.currentTime + 0.1); // C6
+                
+                gain.gain.setValueAtTime(0.1, ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.3);
+
+                osc.start(ctx.currentTime);
+                osc.stop(ctx.currentTime + 0.3);
+            } catch (e) { console.error("Audio error", e); }
+        };
+
+        // --- CONFETTI ENGINE (Minimal) ---
+        const triggerConfetti = () => {
+            const colors = ['#10b981', '#3b82f6', '#f43f5e', '#f59e0b'];
+            for (let i = 0; i < 30; i++) {
+                const el = document.createElement('div');
+                el.style.position = 'fixed';
+                el.style.left = Math.random() * window.innerWidth + 'px';
+                el.style.top = Math.random() * window.innerHeight + 'px';
+                el.style.width = '6px';
+                el.style.height = '6px';
+                el.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                el.style.pointerEvents = 'none';
+                el.style.zIndex = '9999';
+                document.body.appendChild(el);
+
+                const angle = Math.random() * Math.PI * 2;
+                const velocity = 2 + Math.random() * 2;
+                const tx = Math.cos(angle) * 100 * velocity;
+                const ty = Math.sin(angle) * 100 * velocity;
+
+                el.animate([
+                    { transform: 'translate(0, 0) scale(1)', opacity: 1 },
+                    { transform: `translate(${tx}px, ${ty}px) scale(0)`, opacity: 0 }
+                ], {
+                    duration: 800,
+                    easing: 'cubic-bezier(0, .9, .57, 1)',
+                }).onfinish = () => el.remove();
             }
         };
 
@@ -179,23 +237,38 @@
         );
 
 
-        // --- COMPONENT: SIMPLE BAR CHART ---
-        const VisualBarChart = ({ data }) => {
-            const maxVal = Math.max(...data.map(d => d.tasks), 1);
+        // --- COMPONENT: HEATMAP (GitHub Style) ---
+        const Heatmap = ({ data }) => {
+            // Generate last 28 days
+            const days = Array.from({length: 28}, (_, i) => {
+                const d = new Date();
+                d.setDate(d.getDate() - (27 - i));
+                return d;
+            });
+
             return (
-                <div className="h-40 flex items-end justify-between gap-2">
-                    {data.map((d, i) => {
-                        const heightPct = (d.tasks / maxVal) * 100;
+                <div className="flex gap-1 justify-between pt-4">
+                    {days.map((d, i) => {
+                        const dateStr = getLocalDateString(d);
+                        const dayData = data[dateStr] || {};
+                        const count = Object.values(dayData).filter(Boolean).length;
+                        
+                        // Color intensity based on tasks done
+                        let bgClass = "bg-slate-800/50"; // Empty
+                        if (count > 0) bgClass = "bg-emerald-900";
+                        if (count > 2) bgClass = "bg-emerald-700";
+                        if (count > 5) bgClass = "bg-emerald-500";
+                        if (count > 8) bgClass = "bg-emerald-400";
+
+                        const isToday = i === 27;
+
                         return (
-                            <div key={i} className="flex flex-col items-center gap-2 flex-1 h-full justify-end group">
-                                <div className="w-full relative h-full flex items-end bg-slate-800/20 rounded-t-sm overflow-hidden">
-                                    <div 
-                                        className="w-full bg-emerald-500 hover:bg-emerald-400 transition-all duration-700 ease-out"
-                                        style={{ height: `${heightPct}%` }}
-                                    ></div>
+                            <div key={i} className="group relative flex-1 flex flex-col items-center">
+                                <div className={`w-full aspect-[4/5] rounded-sm ${bgClass} transition-all duration-300 ${isToday ? 'ring-1 ring-white' : ''}`}></div>
+                                {/* Tooltip */}
+                                <div className="absolute -top-8 left-1/2 -translate-x-1/2 bg-slate-800 border border-slate-600 px-2 py-1 rounded text-[9px] text-white opacity-0 group-hover:opacity-100 transition whitespace-nowrap z-20 pointer-events-none shadow-xl">
+                                    {d.toLocaleDateString('en-US', {month:'short', day:'numeric'})}: {count} Done
                                 </div>
-                                <span className="text-[9px] text-slate-500 font-mono uppercase">{d.name}</span>
-                                <div className="text-[9px] text-white font-bold absolute -mt-6 opacity-0 group-hover:opacity-100 transition">{d.tasks}</div>
                             </div>
                         );
                     })}
@@ -262,6 +335,7 @@
                 d.setDate(d.getDate() + 1); // Start from Tomorrow
                 return d;
             });
+            const [notifPerm, setNotifPerm] = useState(Notification.permission);
 
             useEffect(() => {
                 const interval = setInterval(() => setCurrentTime(getCurrentTimeMinutes()), 60000); 
@@ -296,16 +370,26 @@
                     alert("PROTOCOL VIOLATION: Time window expired. Task locked as FAILED.");
                     return;
                 }
+                
                 const dayData = data[dateKey] || {};
-                const newData = { ...data, [dateKey]: { ...dayData, [idx]: !dayData[idx] } };
+                const newState = !dayData[idx];
+                
+                const newData = { ...data, [dateKey]: { ...dayData, [idx]: newState } };
                 setData(newData);
+
+                if (newState) {
+                    playSuccessSound();
+                    triggerConfetti();
+                }
+            };
+
+            const requestNotifs = () => {
+                Notification.requestPermission().then(setNotifPerm);
             };
 
             // --- ANALYTICS ---
             const stats = useMemo(() => {
-                // Use selected date's schedule instead of always today
                 const displayedTasks = SCHEDULES[getScheduleType(selectedDate)];
-                // Use selected date's data instead of today's
                 const dayData = data[dateKey] || {};
                 
                 let missedCount = 0;
@@ -315,7 +399,6 @@
                 let completedMinutes = 0;
 
                 displayedTasks.forEach((item, idx) => {
-                    // Check status for the currently selected date
                     const status = getTaskStatus(idx, item.time, dayData[idx]);
                     if (status === 'MISSED') {
                         missedCount++;
@@ -327,24 +410,8 @@
                     }
                 });
 
-                // Weekly Data for Graph (remains unchanged as it's a trend)
-                let graphTrend = [];
-                let totalStreak = 0;
-                
-                // Graph data (Last 7 Days)
-                for(let i=6; i>=0; i--) {
-                    let d = new Date();
-                    d.setDate(d.getDate() - i);
-                    let dk = getLocalDateString(d);
-                    let count = 0;
-                    if (data[dk]) {
-                        count = Object.values(data[dk]).filter(Boolean).length;
-                    }
-                    graphTrend.push({ name: d.toLocaleDateString('en-US', {weekday:'short'}), tasks: count });
-                }
-
-                return { missedCount, wastedMinutes, missedList, completedList, completedMinutes, graphTrend };
-            }, [data, currentTime, selectedDate, dateKey]); // Added selectedDate/dateKey dependency
+                return { missedCount, wastedMinutes, missedList, completedList, completedMinutes };
+            }, [data, currentTime, selectedDate, dateKey]); 
 
             const changeDate = (days) => {
                 const newDate = new Date(selectedDate);
@@ -380,7 +447,12 @@
                             </div>
                         </div>
                         
-                        <div className="flex gap-4 mt-6 md:mt-0">
+                        <div className="flex gap-4 mt-6 md:mt-0 items-center">
+                            {notifPerm !== 'granted' && (
+                                <button onClick={requestNotifs} className="text-xs text-amber-500 hover:text-amber-400 underline">
+                                    Enable Alerts
+                                </button>
+                            )}
                             <button onClick={resetAll} className="px-3 py-2 text-[10px] text-red-500 border border-red-900/50 rounded hover:bg-red-950 hover:text-red-400 transition uppercase tracking-widest">
                                 System Reset
                             </button>
@@ -440,7 +512,7 @@
                                                     {item.task}
                                                 </div>
                                                 <div className="flex gap-2 mt-1">
-                                                    {/* FIXED: Category Badge with explicit color */}
+                                                    {/* Category Badge */}
                                                     <span className={`text-[9px] uppercase tracking-wider font-bold ${catColor}`}>
                                                         {item.cat}
                                                     </span>
@@ -451,7 +523,7 @@
                                             </div>
 
                                             <div className={`w-6 h-6 rounded border flex items-center justify-center transition-all duration-300 
-                                                ${isChecked ? 'bg-emerald-500 border-emerald-500' : 
+                                                ${isChecked ? 'bg-emerald-500 border-emerald-500 pop-anim' : 
                                                   status === 'MISSED' ? 'bg-red-900/20 border-red-900' : 
                                                   'border-slate-700 bg-slate-900'}`}>
                                                 {isChecked && <span className="text-white text-xs font-bold">✓</span>}
@@ -467,12 +539,12 @@
                         {/* RIGHT: METRICS & LOGS */}
                         <div className="space-y-6">
                             
-                            {/* GRAPH: FINISHED TASKS */}
+                            {/* GRAPH: HEATMAP */}
                             <div className="glass-panel p-6 rounded-xl">
                                 <h3 className="text-slate-400 text-[10px] uppercase tracking-[0.2em] mb-4 font-bold border-b border-slate-800 pb-2">
-                                    Completed Output (7 Days)
+                                    Consistency Heatmap (28 Days)
                                 </h3>
-                                <VisualBarChart data={stats.graphTrend} />
+                                <Heatmap data={data} />
                             </div>
 
                             {/* VICTORY LOG */}
