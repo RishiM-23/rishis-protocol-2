@@ -249,108 +249,126 @@
 
         // --- SCHEDULE DATA ---
         
+        // --- SCHEDULE DATA ---
+        
         const SCHEDULES = {
 
-            SHORT: [ // Mon, Wed, Thu
-
+            MON: [ // Ends 1:15 PM
                 { time: "07:00", task: "Wake Up & Breakfast", cat: "Health", duration: 60 },
-
-                { time: "08:00", task: "Scooter Commute (Audio/Music)", cat: "Life", duration: 45 },
-
-                { time: "08:45", task: "Attend Classes (Front Row Focus)", cat: "Academic", duration: 270 },
-
-                { time: "13:15", task: "Commute Home (Decompress)", cat: "Life", duration: 60 },
-
-                { time: "14:15", task: "Lunch & Power Nap (Strict 20m)", cat: "Health", duration: 60 },
-
-                { time: "15:15", task: "DSA Session 1: Sliding Window/BS (3 Qs)", cat: "DSA", duration: 135 },
-
-                { time: "17:30", task: "Break / Walk", cat: "Health", duration: 30 },
-
-                { time: "18:00", task: "DSA Session 2: Stack/Adhoc (2 Qs)", cat: "DSA", duration: 90 },
-
-                { time: "19:30", task: "Dinner & Family", cat: "Life", duration: 60 },
-
-                { time: "20:30", task: "ISA Prep / Academics (2.5 Hrs)", cat: "Academic", duration: 150 },
-
-                { time: "23:00", task: "Buffer / Chill", cat: "Life", duration: 60 },
-
-                { time: "00:00", task: "Sleep", cat: "Health", duration: 420 }
-
+                { time: "08:00", task: "Commute (Audio/Music)", cat: "Life", duration: 45 },
+                { time: "08:45", task: "Class: Linear Algebra (LAA)", cat: "Academic", duration: 60 },
+                { time: "09:45", task: "Class: Microprocessors (MPCA)", cat: "Academic", duration: 60 },
+                { time: "10:45", task: "Short Break", cat: "Life", duration: 30 },
+                { time: "11:15", task: "Class: Computer Networks (CN)", cat: "Academic", duration: 120 },
+                { time: "13:15", task: "Commute Home (Decompress)", cat: "Life", duration: 45 },
+                { time: "14:00", task: "Lunch & Power Nap", cat: "Health", duration: 60 },
+                { time: "15:00", task: "DSA Session 1", cat: "DSA", duration: 120 },
+                { time: "17:00", task: "Evening Walk / Workout", cat: "Health", duration: 45 },
+                { time: "17:45", task: "ISA Prep", cat: "Academic", duration: 90 },
+                { time: "19:15", task: "Dinner & Family", cat: "Life", duration: 60 },
+                { time: "20:15", task: "DSA Session 2", cat: "DSA", duration: 60 },
+                { time: "21:15", task: "Buffer / Chill", cat: "Life", duration: 105 },
+                { time: "23:00", task: "Sleep", cat: "Health", duration: 480 }
             ],
 
-
-            LONG: [ // Tue, Fri
-
+            TUE: [ // Lab Day (Ends 4:45 PM)
                 { time: "07:00", task: "Wake Up & Breakfast", cat: "Health", duration: 60 },
+                { time: "08:00", task: "Commute", cat: "Life", duration: 45 },
+                { time: "08:45", task: "Class: Computer Networks (CN)", cat: "Academic", duration: 120 },
+                { time: "10:45", task: "Short Break", cat: "Life", duration: 30 },
+                { time: "11:15", task: "Class: Linear Algebra (LAA)", cat: "Academic", duration: 60 },
+                { time: "12:15", task: "Class: Operating Systems (OS)", cat: "Academic", duration: 60 },
+                { time: "13:15", task: "Lunch @ Campus", cat: "Health", duration: 45 },
+                { time: "14:00", task: "LAB: MPCA (Microprocessors)", cat: "Academic", duration: 165 },
+                { time: "16:45", task: "Commute Home (Nap on bus)", cat: "Life", duration: 60 },
+                { time: "17:45", task: "Recovery & Snacks", cat: "Health", duration: 45 },
+                { time: "18:30", task: "DSA Session 1", cat: "DSA", duration: 90 },
+                { time: "20:00", task: "Dinner", cat: "Life", duration: 60 },
+                { time: "21:00", task: "ISA Prep", cat: "Academic", duration: 90 },
+                { time: "22:30", task: "Wind Down", cat: "Life", duration: 30 },
+                { time: "23:00", task: "Sleep", cat: "Health", duration: 480 }
+            ],
 
-                { time: "08:00", task: "Commute (Mental Lab Prep)", cat: "Academic", duration: 45 },
+            WED: [ // Ends 1:15 PM (Heavy DAA Day)
+                { time: "07:00", task: "Wake Up & Breakfast", cat: "Health", duration: 60 },
+                { time: "08:00", task: "Commute", cat: "Life", duration: 45 },
+                { time: "08:45", task: "Class: DAA (Algorithms)", cat: "Academic", duration: 120 },
+                { time: "10:45", task: "Short Break", cat: "Life", duration: 30 },
+                { time: "11:15", task: "Class: Linear Algebra (LAA)", cat: "Academic", duration: 60 },
+                { time: "12:15", task: "Class: Operating Systems (OS)", cat: "Academic", duration: 60 },
+                { time: "13:15", task: "Commute Home", cat: "Life", duration: 45 },
+                { time: "14:00", task: "Lunch & Nap", cat: "Health", duration: 60 },
+                { time: "15:00", task: "DSA Session 1", cat: "DSA", duration: 90 },
+                { time: "16:30", task: "ISA Prep", cat: "Academic", duration: 90 },
+                { time: "18:00", task: "Break / Gym", cat: "Health", duration: 60 },
+                { time: "19:00", task: "DSA Session 2", cat: "DSA", duration: 90 },
+                { time: "20:30", task: "Dinner", cat: "Life", duration: 60 },
+                { time: "21:30", task: "Light Reading / Buffer", cat: "Life", duration: 90 },
+                { time: "23:00", task: "Sleep", cat: "Health", duration: 480 }
+            ],
 
-                { time: "08:45", task: "Attend Classes & Labs", cat: "Academic", duration: 480 },
+            THU: [ // Ends 1:15 PM
+                { time: "07:00", task: "Wake Up & Breakfast", cat: "Health", duration: 60 },
+                { time: "08:00", task: "Commute", cat: "Life", duration: 45 },
+                { time: "08:45", task: "Class: MPCA", cat: "Academic", duration: 60 },
+                { time: "09:45", task: "Class: DAA", cat: "Academic", duration: 60 },
+                { time: "10:45", task: "Short Break", cat: "Life", duration: 30 },
+                { time: "11:15", task: "Class: OS", cat: "Academic", duration: 60 },
+                { time: "12:15", task: "Class: DAA (Double Algo Day)", cat: "Academic", duration: 60 },
+                { time: "13:15", task: "Commute Home", cat: "Life", duration: 45 },
+                { time: "14:00", task: "Lunch & Nap", cat: "Health", duration: 60 },
+                { time: "15:00", task: "DSA Session 1", cat: "DSA", duration: 120 },
+                { time: "17:00", task: "Break", cat: "Health", duration: 30 },
+                { time: "17:30", task: "ISA Prep", cat: "Academic", duration: 90 },
+                { time: "19:00", task: "Dinner", cat: "Life", duration: 60 },
+                { time: "20:00", task: "DSA Session 2", cat: "DSA", duration: 60 },
+                { time: "21:00", task: "Chill / Social", cat: "Life", duration: 120 },
+                { time: "23:00", task: "Sleep", cat: "Health", duration: 480 }
+            ],
 
-                { time: "16:45", task: "Commute Home (Nap on bus if can)", cat: "Health", duration: 60 },
-
-                { time: "17:45", task: "Recovery & Snack", cat: "Health", duration: 45 },
-
-                { time: "18:30", task: "DSA Sprint (3 Strong Topic Qs)", cat: "DSA", duration: 135 },
-
-                { time: "20:45", task: "Dinner", cat: "Life", duration: 60 },
-
-                { time: "21:45", task: "Lab Record / ISA Catch-up", cat: "Academic", duration: 135 },
-
+            FRI: [ // Lab Day (Ends 4:45 PM)
+                { time: "07:00", task: "Wake Up & Breakfast", cat: "Health", duration: 60 },
+                { time: "08:00", task: "Commute", cat: "Life", duration: 45 },
+                { time: "08:45", task: "Class: Linear Algebra (LAA)", cat: "Academic", duration: 60 },
+                { time: "09:45", task: "Class: Operating Systems (OS)", cat: "Academic", duration: 60 },
+                { time: "10:45", task: "Short Break", cat: "Life", duration: 30 },
+                { time: "11:15", task: "Class: MPCA", cat: "Academic", duration: 120 },
+                { time: "13:15", task: "Lunch @ Campus", cat: "Health", duration: 45 },
+                { time: "14:00", task: "LAB: Computer Networks (CN)", cat: "Academic", duration: 165 },
+                { time: "16:45", task: "Commute Home", cat: "Life", duration: 60 },
+                { time: "17:45", task: "Recovery", cat: "Health", duration: 45 },
+                { time: "18:30", task: "ISA Prep", cat: "Academic", duration: 90 },
+                { time: "20:00", task: "Dinner", cat: "Life", duration: 60 },
+                { time: "21:00", task: "Social / Movie / Fun", cat: "Life", duration: 180 },
                 { time: "00:00", task: "Sleep", cat: "Health", duration: 420 }
-
             ],
 
-
-            SAT: [ // Saturday
-
-                { time: "09:00", task: "ISA Deep Work (Maths/LAA)", cat: "Academic", duration: 240 },
-
-                { time: "14:00", task: "Mock OA (4 Qs, 60 mins)", cat: "DSA", duration: 90 },
-
-                { time: "15:30", task: "Mock Analysis & Review", cat: "DSA", duration: 90 },
-
-                { time: "17:00", task: "Backlog Clearing", cat: "Academic", duration: 120 },
-
-                { time: "19:00", task: "Social / Fun Night", cat: "Life", duration: 300 }
-
+            SAT: [ // Projects & Special Topics
+                { time: "08:00", task: "Wake Up", cat: "Health", duration: 45 },
+                { time: "08:45", task: "Experimental Learning / Projects", cat: "Academic", duration: 270 },
+                { time: "13:15", task: "Lunch", cat: "Health", duration: 45 },
+                { time: "14:00", task: "DSA Session 1", cat: "DSA", duration: 120 },
+                { time: "16:00", task: "Project Work (Web Dev)", cat: "Academic", duration: 120 },
+                { time: "18:00", task: "Social Night", cat: "Life", duration: 300 }
             ],
 
-
-            SUN: [ // Sunday
-
-                { time: "08:00", task: "Wake Up (Sleep In)", cat: "Health", duration: 60 },
-
-                { time: "09:00", task: "NGO / Direct Leader Duty", cat: "Life", duration: 330 },
-
-                { time: "14:30", task: "Lunch & Recovery Nap", cat: "Health", duration: 90 },
-
-                { time: "16:00", task: "Red List: Re-solve Failed Qs", cat: "DSA", duration: 150 },
-
-                { time: "18:30", task: "Weekly Prep (Pack bag)", cat: "Life", duration: 60 },
-
-                { time: "20:30", task: "Light Reading (Mon Subjects)", cat: "Academic", duration: 90 }
-
+            SUN: [ // Reset Day
+                { time: "09:00", task: "Wake Up & NGO Duty", cat: "Life", duration: 330 },
+                { time: "14:30", task: "Lunch & Long Nap", cat: "Health", duration: 90 },
+                { time: "16:00", task: "DSA Session 1", cat: "DSA", duration: 120 },
+                { time: "18:00", task: "Weekly Plan & Laundry", cat: "Life", duration: 60 },
+                { time: "19:00", task: "Casual Coding / Reading", cat: "Life", duration: 120 },
+                { time: "21:00", task: "Early Sleep", cat: "Health", duration: 60 }
             ]
 
         };
 
 
         const getScheduleType = (date) => {
-
             const day = date.getDay(); 
-
-            if (day === 0) return 'SUN';
-
-            if (day === 6) return 'SAT';
-
-            if (day === 2 || day === 5) return 'LONG';
-
-            return 'SHORT';
-
+            const days = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
+            return days[day];
         };
-
 
         // --- COMPONENT: STATUS CARD ---
 
